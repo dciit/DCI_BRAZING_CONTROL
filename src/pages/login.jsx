@@ -16,6 +16,7 @@ import axios from 'axios';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { ServiceLogin } from '../Service';
+import { API_HR_LOGIN } from '../ServiceHR';
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -43,8 +44,9 @@ export default function Login() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         var pwd = data.get('password').toString();
+        var username = data.get('email')?.toString();
         var req = 0;
-        if (data.get('email')?.toString().length == 0) {
+        if (username.length == 0) {
             setUseReq(true)
             req = 1;
         }
@@ -62,19 +64,20 @@ export default function Login() {
                         dispatch({ type: 'LOGIN', payload: { login: true, name: res.data[0]?.FullName, empcode: res.data[0].EmpCode } });
                         setShowLoginFalse(false)
                     } else {
-                        const login = await ServiceLogin(data.get('email'));    
-                        if(login){
+                        const login = await ServiceLogin(data.get('email'));
+                        if (login.status == true) {
                             dispatch({ type: 'LOGIN', payload: { login: true, name: login.name, empcode: login.empCode } });
                             setShowLoginFalse(false)
-                        }else{
+                        } else {
                             setShowLoginFalse(true)
                             setOpenBackdrop(false);
                         }
+                        loginbyempcode(username,pwd);
                     }
                 }).catch((error) => {
-                    console.log(error)
                     alert('ไม่สามารถเข้าสู่ระบบได้ เนื่องจาก ' + error.message)
                     setShowLoginFalse(true)
+                    setOpenBackdrop(false);
                 })
             } catch (error) {
                 alert('ไม่สามารถเข้าสู่ระบบได้ เนื่องจาก ' + error.message)
@@ -83,6 +86,10 @@ export default function Login() {
             }
         }
     };
+    async function loginbyempcode(username, pwd) {
+        var hrlogin = await API_HR_LOGIN({ username: username, password: pwd });
+        setOpenBackdrop(false)
+    }
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="sm" className='flex flex-col'>
@@ -106,7 +113,7 @@ export default function Login() {
                             fullWidth
                             size='small'
                             id="email"
-                            label="รหัสเข้าเครื่อง"
+                            label="รหัสเข้าเครื่อง/รหัสพนักงาน"
                             name="email"
                             autoComplete="email"
                             autoFocus
@@ -117,7 +124,7 @@ export default function Login() {
                             fullWidth
                             size='small'
                             name="password"
-                            label="รหัสผ่าน"
+                            label="รหัสผ่านเข้าเครื่อง/รหัสพนักงาน"
                             type="password"
                             id="password"
                             autoComplete="current-password"

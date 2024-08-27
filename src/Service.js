@@ -20,7 +20,6 @@ export function ServiceGetLineControl() {
 export function ServiceGetUser(lineControl) {
     return new Promise(resolve => {
         http.get(`/brazing/user/` + lineControl).then((res) => {
-            console.log(res)
             resolve(res.data);
         })
     });
@@ -45,6 +44,14 @@ export const ServiceGetDataMatrix = () => {
 export const ServiceLogin = (empcode) => {
     return new Promise(resolve => {
         http.post(`/user/login`, { code: empcode }).then((res)=>{
+            resolve(res.data);
+        })
+    })
+}
+
+export const ServiceHRAPI = (user,pwd) => {
+    return new Promise(resolve=>{
+        http.post(``,{username:user,password:pwd}).then((res)=>{
             resolve(res.data);
         })
     })

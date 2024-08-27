@@ -4,6 +4,7 @@ import Page404 from "../pages/page404";
 import { useDispatch, useSelector } from "react-redux";
 import BrazingControl from "../pages/BrazingControl";
 import BrazingControlMatrix from "../pages/BrazingControlMatrix";
+import { persistor } from "../redux/store";
 const Routers = () => {
     const dispatch = useDispatch();
     const BasePath = import.meta.env.VITE_PATH;
@@ -11,6 +12,7 @@ const Routers = () => {
     const reducer = useSelector(state => state.reducer);
     if (reducer.version == 'undefined' || reducer.version != version) {
         dispatch({ type: 'RESET', payload: { version: version, login: false } });
+        persistor.purge();
     }
     return (
         <BrowserRouter>
@@ -20,7 +22,6 @@ const Routers = () => {
                     <Route path={BasePath + '/Matrix'} element={<BrazingControlMatrix />} />
                 </Route>
                 <Route path="*" element={<Page404 />} />
-
             </Routes>
         </BrowserRouter>
     );

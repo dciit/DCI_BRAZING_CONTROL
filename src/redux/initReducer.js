@@ -9,15 +9,21 @@ const initialState = {
         }
     },
     version: 0,
-    objectselected: null
+    objectselected: null,
+    menu: ''
 }
 
 const IndexReducer = (state = initialState, action) => {
     switch (action.type) {
+        case 'SET_MENU':
+            return {
+                ...state,
+                menu: action.payload
+            }
         case 'LOGIN':
             return {
                 ...state,
-                ...action.payload
+                ...action.payload,
             }
         case 'FILTER_CHANGE':
             return {

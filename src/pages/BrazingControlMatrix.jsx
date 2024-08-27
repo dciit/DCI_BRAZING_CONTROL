@@ -77,7 +77,7 @@ export default function BrazingControlMatrix() {
                             </thead>
                             <tbody>
                                 {
-                                    loading ? <tr><td colSpan={12} className='text-center'><CircularProgress /></td></tr> : (
+                                    loading ? <tr><td colSpan={17} className='text-center'><CircularProgress /></td></tr> : (
                                         datas.map((item, index) => {
                                             return <tr key={index}>
                                                 <td className='text-center'>{item.index}</td>
